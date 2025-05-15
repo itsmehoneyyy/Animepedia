@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-rlzqlfb^d=w#y)@jlp_776+2n11jc540ia-)7j=w$_zo-+&03c
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+CORS_ALLOW_ALL_ORIGINS = True
+AUTH_USER_MODEL = 'users.CustomUser'
 
 # Application definition
 
@@ -37,9 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
+    'rest_framework',
+    'animeapp',
+    'users',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -78,7 +84,7 @@ DATABASES = {
     'NAME': 'mydb',
     'USER': 'myuser',
     'PASSWORD': 'mypassword',
-    'HOST': 'db',  # ชื่อ container ใน docker-compose
+    'HOST': 'db',
     'PORT': 5432,
   }
 }
