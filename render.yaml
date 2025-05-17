@@ -1,0 +1,40 @@
+services:
+  - type: web
+    name: backend
+        runtime: docker
+    build:
+      context: ./backend
+    env: docker
+    plan: free
+    repo: https://github.com/itsmehoneyyy/Animepedia
+    dockerfilePath: backend/Dockerfile
+    buildCommand: ""
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: animepedia-db
+          property: connectionString
+      - key: DEBUG
+        value: "False"
+      - key: hA9lIdqqKzZGsiQxM9No5etJobXkDNGb
+        value: your-tlexplus-key
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+
+  - type: web
+    name: frontend
+    env: docker
+    plan: free
+    repo: https://github.com/itsmehoneyyy/Animepedia
+    dockerfilePath: frontend/Dockerfile
+    buildCommand: ""
+    envVars:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://animepedia-backend.onrender.com/api/
+      - key: CHOKIDAR_USEPOLLING
+        value: "true"
+
+databases:
+  - name: animepedia-db
+    databaseName: mydb
+    user: myuser
