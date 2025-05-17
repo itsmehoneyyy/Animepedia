@@ -24,7 +24,7 @@ git pull origin main --allow-unrelated-histories
 git remote -v
 
 git add .
-git commit -m "Initial commit for Animepedia fullstack project"
+git commit -m "update frintend homepage"
 git branch -M main
 git push -u origin main
 

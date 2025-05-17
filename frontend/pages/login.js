@@ -10,7 +10,7 @@ export default function Login() {
     const submit = async e => {
         e.preventDefault()
         await login(form.username, form.password)
-        router.push('/')  // กลับหน้าแรก
+        router.push('/')
     }
 
     return (

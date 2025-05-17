@@ -1,36 +1,56 @@
-import { createContext, useState, useEffect, useContext } from 'react'
-import jwtDecode from 'jwt-decode'
+import { createContext, useState, useEffect } from 'react'
 import api from '../lib/api'
+import { useRouter } from 'next/router'
 
-const AuthContext = createContext({})
+export const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
-    const [user, setUser] = useState(null)
+  const [user, setUser] = useState(null)
+  const [accessToken, setAccessToken] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
-    useEffect(() => {
-        const token = localStorage.getItem('access_token')
-        if (token) {
-            const payload = jwtDecode(token)
-            setUser({ username: payload.username, exp: payload.exp })
+  // Load user when app starts
+  useEffect(() => {
+    const token = localStorage.getItem('access')
+    if (token) {
+      setAccessToken(token)
+      api.get('/auth/me/', {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-    }, [])
-
-    const login = async (username, password) => {
-        const { data } = await api.post('/auth/login/', { username, password })
-        localStorage.setItem('access_token', data.access)
-        setUser(jwtDecode(data.access))
+      })
+        .then(res => setUser(res.data))
+        .catch(() => setUser(null))
+        .finally(() => setLoading(false))
+    } else {
+      setLoading(false)
     }
+  }, [])
 
-    const logout = () => {
-        localStorage.removeItem('access_token')
-        setUser(null)
-    }
+  const login = (access, refresh) => {
+    localStorage.setItem('access', access)
+    localStorage.setItem('refresh', refresh)
+    setAccessToken(access)
+    api.get('/auth/me/', {
+      headers: { Authorization: `Bearer ${access}` }
+    }).then(res => {
+      setUser(res.data)
+      router.push('/')
+    })
+  }
 
-    return (
-        <AuthContext.Provider value={{ user, login, logout }}>
-            {children}
-        </AuthContext.Provider>
-    )
+  const logout = () => {
+    localStorage.removeItem('access')
+    localStorage.removeItem('refresh')
+    setUser(null)
+    setAccessToken(null)
+    router.push('/signin')
+  }
+
+  return (
+    <AuthContext.Provider value={{ user, accessToken, loading, login, logout, setUser }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
-
-export const useAuth = () => useContext(AuthContext)

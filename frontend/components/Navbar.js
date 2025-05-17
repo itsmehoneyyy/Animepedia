@@ -10,19 +10,21 @@ export default function Navbar() {
             </Link>
 
             <div className="flex items-center space-x-4">
-                {/* ปุ่ม Home (คลิกแล้วก็ไปหน้า Home) */}
+                {/* ปุ่ม Home */}
                 <Link href="/" className="underline text-sm hover:text-indigo-600">
                     Home
                 </Link>
 
-                {/* Avatar */}
-                <Image
-                    src="https://drive.google.com/uc?export=view&id=1l4KMoXmlHhokSO4v04prDHBduxehzvky"
-                    width={32}
-                    height={32}
-                    alt="User avatar"
-                    className="rounded-full"
-                />
+                {/* ✅ Avatar → ลิงก์ไป /profile */}
+                <Link href="/profile" className="hover:opacity-80">
+                    <Image
+                        src="https://drive.google.com/uc?export=view&id=1l4KMoXmlHhokSO4v04prDHBduxehzvky"
+                        width={32}
+                        height={32}
+                        alt="User avatar"
+                        className="rounded-full"
+                    />
+                </Link>
             </div>
         </header>
     )

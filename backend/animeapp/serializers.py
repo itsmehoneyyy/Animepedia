@@ -37,31 +37,36 @@ class AnimeSerializer(serializers.ModelSerializer):
             {
                 "name": ap.platform.name,
                 "logo_url": ap.platform.logo_url,
-                "watch_url": ap.watch_url  # ✅ แสดงลิงก์ดูจริง
+                "watch_url": ap.watch_url
             }
             for ap in platform_links
         ]
 
         
-
 class ReviewSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+
     class Meta:
         model  = Review
-        fields = ('id','user','anime','rating','comment','created_at')
-        read_only_fields = ('id','user','created_at')
+        fields = ('id','username','rating','comment','created_at')
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model  = Review
-        fields = ('anime','rating','comment')
+        model = Review
+        fields = ('rating', 'comment')
 
     def create(self, validated_data):
         user = self.context['request'].user
-        return Review.objects.create(user=user, **validated_data)
+        anime = self.context['anime']
+        return Review.objects.create(user=user, anime=anime, **validated_data)
+
+
 
 class UserAnimeListSerializer(serializers.ModelSerializer):
+    anime = serializers.PrimaryKeyRelatedField(queryset=Anime.objects.all())
+
     class Meta:
-        model  = UserAnimeList
+        model = UserAnimeList
         fields = ('anime','status')
 
     def create(self, validated_data):
@@ -72,3 +77,4 @@ class UserAnimeListSerializer(serializers.ModelSerializer):
             defaults={'status': validated_data['status']}
         )
         return obj
+

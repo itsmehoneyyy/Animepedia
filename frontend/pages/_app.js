@@ -1,7 +1,4 @@
 import '../styles/globals.css'
-import 'swiper/css'
-import 'swiper/css/navigation'
-import 'swiper/css/pagination'
 import { SWRConfig } from 'swr'
 import api from '../lib/api'
 import { AuthProvider } from '../context/AuthContext'
@@ -12,12 +9,11 @@ function MyApp({ Component, pageProps }) {
     <AuthProvider>
       <SWRConfig
         value={{
-          fetcher: (url) => api.get(url).then(res => res.data),
-          onError: (err) => {
-            console.error('SWR Error:', err)
-          },
+          fetcher: url => api.get(url).then(res => res.data),
+          onError: err => console.error('SWR error', err),
         }}
       >
+        <Navbar /> {/* ✅ แสดง Navbar ทุกหน้า */}
         <Component {...pageProps} />
       </SWRConfig>
     </AuthProvider>

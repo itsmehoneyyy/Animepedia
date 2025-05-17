@@ -1,17 +1,19 @@
 import { useState, useEffect } from 'react'
 import api from '../lib/api'
-import Navbar from '../components/Navbar'
 import Banner from '../components/Banner'
 import FilterBar from '../components/FilterBar'
 import AnimeCard from '../components/AnimeCard'
+import { useRouter } from 'next/router'
 
 export default function Home() {
+  const router = useRouter()
+
   const [allAnimes, setAllAnimes] = useState([])
   const [filteredAnimes, setFilteredAnimes] = useState([])
   const [filters, setFilters] = useState({ genres: [], platforms: [], sort: '' })
   const [searchTerm, setSearchTerm] = useState('')
 
-  // โหลด anime ทั้งหมดแค่ครั้งเดียว
+  // โหลด anime ทั้งหมดครั้งแรก
   useEffect(() => {
     api.get('/animes/').then(r => {
       setAllAnimes(r.data)
@@ -19,7 +21,26 @@ export default function Home() {
     })
   }, [])
 
-  // กรองตามคำค้นแบบ client-side
+  // ถ้ามี query ?genre=xxx → ตั้งค่า filter
+  useEffect(() => {
+    const genreFromQuery = router.query.genre
+    if (genreFromQuery) {
+      setFilters(prev => ({
+        ...prev,
+        genres: [genreFromQuery]
+      }))
+    }
+  }, [router.query.genre])
+
+  // เรียก API เมื่อ filter จาก query ถูกเซ็ต
+  useEffect(() => {
+    if (filters.genres.length > 0) {
+      handleSearchClick()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filters.genres])
+
+  // client-side search
   useEffect(() => {
     const lower = searchTerm.toLowerCase()
     setFilteredAnimes(
@@ -31,7 +52,6 @@ export default function Home() {
     )
   }, [searchTerm, allAnimes])
 
-  // กดปุ่ม "ค้นหา" → fetch ด้วย filter ใหม่
   const handleSearchClick = () => {
     const qp = new URLSearchParams()
     filters.genres.forEach(g => qp.append('genres__name', g))
@@ -39,13 +59,12 @@ export default function Home() {
     if (filters.sort) qp.append('ordering', filters.sort)
     api.get(`/animes/?${qp.toString()}`).then(r => {
       setAllAnimes(r.data)
-      setSearchTerm('') // ล้างคำค้นเพื่อไม่ให้กรองต่อ
+      setSearchTerm('')
     })
   }
 
   return (
     <>
-      <Navbar />
       <Banner searchTerm={searchTerm} onSearch={setSearchTerm} />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 mt-12">
