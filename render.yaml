@@ -6,10 +6,6 @@ services:
     repo: https://github.com/itsmehoneyyy/Animepedia
     dockerfilePath: backend/Dockerfile
     buildCommand: ""
-    startCommand: >
-      sh -c "python wait_for_db.py &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
