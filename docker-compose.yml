@@ -16,6 +16,7 @@ services:
     build: ./backend
     volumes:
       - ./backend:/app
+      - ./backend/animeapp/management/commands:/app/animeapp/management/commands
     ports:
       - "8000:8000"
     depends_on:
@@ -34,7 +35,8 @@ services:
     depends_on:
       - backend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/
+      - CHOKIDAR_USEPOLLING=true
 
 volumes:
   pgdata:

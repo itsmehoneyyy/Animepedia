@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models 
 from users.models import CustomUser
 
 class Genre(models.Model):
@@ -10,8 +10,8 @@ class Genre(models.Model):
 
 class Platform(models.Model):
     name = models.CharField(max_length=100)
-    logo_url = models.URLField(blank=True)
-    base_url = models.URLField()
+    logo_url = models.URLField(blank=True, max_length=1000)
+    base_url = models.URLField(max_length=1000)
 
     def __str__(self):
         return self.name
@@ -23,7 +23,7 @@ class Anime(models.Model):
     description = models.TextField()
     year = models.PositiveIntegerField()
     studio = models.CharField(max_length=255)
-    poster_url = models.URLField(blank=True)
+    poster_url = models.URLField(blank=True, max_length=1000)
     avg_rating = models.FloatField(default=0.0)
 
     genres = models.ManyToManyField(Genre, through='AnimeGenre', related_name='animes')
@@ -44,7 +44,7 @@ class AnimeGenre(models.Model):
 class AnimePlatform(models.Model):
     anime = models.ForeignKey(Anime, on_delete=models.CASCADE, related_name='anime_platforms')
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE, related_name='platform_animes')
-    watch_url = models.URLField()
+    watch_url = models.URLField(max_length=1000)
 
     def __str__(self):
         return f"{self.anime.title_en} on {self.platform.name}"
