@@ -1,12 +1,15 @@
-FROM python:3.13.3-slim-bookworm
-
-ENV PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM python:3.11-slim
 
 WORKDIR /app
+
+# ✅ Copy requirements.txt จาก backend
+COPY requirements.txt .
+
+# ✅ ติดตั้ง dependencies
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# ✅ Copy โค้ดทั้งหมดใน backend เข้า /app
 COPY . .
 
-RUN pip install -r requirements.txt
-
-# ย้าย startCommand มาที่นี่แทน
+# ✅ Run Django commands
 CMD ["sh", "-c", "python wait_for_db.py && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]
