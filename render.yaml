@@ -1,14 +1,12 @@
 services:
   - type: web
     name: backend
-        runtime: docker
+    runtime: docker
+    plan: free
     build:
       context: ./backend
-    env: docker
-    plan: free
     repo: https://github.com/itsmehoneyyy/Animepedia
     dockerfilePath: backend/Dockerfile
-    buildCommand: ""
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -16,18 +14,17 @@ services:
           property: connectionString
       - key: DEBUG
         value: "False"
-      - key: hA9lIdqqKzZGsiQxM9No5etJobXkDNGb
-        value: your-tlexplus-key
+      - key: TLEXPLUS_API_KEY
+        value: hA9lIdqqKzZGsiQxM9No5etJobXkDNGb
       - key: DJANGO_SECRET_KEY
         generateValue: true
 
   - type: web
     name: frontend
-    env: docker
+    runtime: docker
     plan: free
     repo: https://github.com/itsmehoneyyy/Animepedia
     dockerfilePath: frontend/Dockerfile
-    buildCommand: ""
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://animepedia-backend.onrender.com/api/
