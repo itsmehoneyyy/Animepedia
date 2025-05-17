@@ -1,5 +1,6 @@
-# Dockerfile (frontend)
-FROM node:18-alpine
+FROM node:18-slim
+
+RUN apt-get update && apt-get install -y build-essential python3
 
 WORKDIR /app
 
@@ -8,7 +9,6 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
-
 EXPOSE 3000
-CMD ["npm", "start"]
+
+CMD ["npm", "run", "dev"]
