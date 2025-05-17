@@ -25,7 +25,6 @@ services:
     repo: https://github.com/itsmehoneyyy/Animepedia
     dockerfilePath: frontend/Dockerfile
     buildCommand: ""
-    startCommand: "npm run start"
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://animepedia-backend.onrender.com/api/
