@@ -9,7 +9,7 @@ services:
         fromDatabase:
           name: animepedia-db
           property: connectionString
-      - key: DJANGO_SECRET_KEY
+      - key: django-insecure-rlzqlfb^d=w#y)@jlp_776+2n11jc540ia-)7j=w$_zo-+&03c
         generateValue: true
       - key: DEBUG
         value: "False"
