@@ -1,4 +1,4 @@
-## Animepedia (commit อาจจะแปลกๆเพราะลองทำ deploy render ย้ายไฟล์ไปมาจน path พัง buld ไม่ได้ เลยจบที่ย้อนกลับมาตัวเก่าค่ะ)
+## Animepedia
 Animepedia (อนิเมะพีเดีย) เว็บไซต์รวมรวบข้อมูลอนิเมะและแพลตฟอร์มดูอนิเมะในไทย
 
 # Animepedia Backend & Frontend
