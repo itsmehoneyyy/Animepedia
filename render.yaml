@@ -1,14 +1,15 @@
 services:
   - type: web
     name: animepedia-backend
-    env: docker
+    runtime: docker
     repo: https://github.com/itsmehoneyyy/Animepedia
     branch: main
-    region: singapore
-    plan: free
     dockerfilePath: backend/Dockerfile
-    buildCommand: ""
-    startCommand: gunicorn animeproject.wsgi:application --bind 0.0.0.0:8000
+    # ใช้คำสั่งเดียวกับ docker-compose command
+    dockerCommand: >
+      sh -c "python wait_for_db.py &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -21,20 +22,16 @@ services:
 
   - type: web
     name: animepedia-frontend
-    env: docker
+    runtime: docker
     repo: https://github.com/itsmehoneyyy/Animepedia
     branch: main
-    region: singapore
-    plan: free
     dockerfilePath: frontend/Dockerfile
-    buildCommand: ""
-    startCommand: npm run build && npm start
+    # ไม่ต้องระบุ dockerCommand ถ้าใช้ CMD ใน Dockerfile (npm run dev)
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://animepedia-backend.onrender.com/api/
       - key: CHOKIDAR_USEPOLLING
         value: "true"
-    autoDeploy: true
 
 databases:
   - name: animepedia-db
