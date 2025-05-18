@@ -10,8 +10,8 @@ services:
 
   backend:
     build:
-      context: ./backend # ← บอกให้ context อยู่ที่โฟลเดอร์ backend
-      dockerfile: Dockerfile
+      context: . # เอา root โปรเจกต์เป็น context
+      dockerfile: backend/Dockerfile
     volumes:
       - ./backend:/app
       - ./backend/animeapp/management/commands:/app/animeapp/management/commands
