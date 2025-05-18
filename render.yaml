@@ -3,7 +3,12 @@ services:
     name: animepedia-backend
     env: docker
     repo: https://github.com/itsmehoneyyy/Animepedia
-    dockerfilePath: ./backend/Dockerfile
+    branch: main
+    region: singapore
+    plan: free
+    dockerfilePath: backend/Dockerfile
+    buildCommand: ""
+    startCommand: gunicorn animeproject.wsgi:application --bind 0.0.0.0:8000
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -13,22 +18,27 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
-    plan: free
-    autoDeploy: true
 
   - type: web
     name: animepedia-frontend
     env: docker
     repo: https://github.com/itsmehoneyyy/Animepedia
-    dockerfilePath: ./frontend/Dockerfile
+    branch: main
+    region: singapore
+    plan: free
+    dockerfilePath: frontend/Dockerfile
+    buildCommand: ""
+    startCommand: npm run build && npm start
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://animepedia-backend.onrender.com/api/
-    plan: free
+      - key: CHOKIDAR_USEPOLLING
+        value: "true"
     autoDeploy: true
 
 databases:
   - name: animepedia-db
+    region: singapore
+    plan: free
     databaseName: mydb
     user: myuser
-    plan: free
