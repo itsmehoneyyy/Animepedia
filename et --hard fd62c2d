@@ -1,0 +1,37 @@
+[33m41e4a23[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m commit
+[33m7309d1d[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m build
+[33ma6d8fa0[m build
+[33m3540bc6[m build
+[33m1a55d2a[m build
+[33m3091859[m build
+[33ma34c6de[m build
+[33mb3efcf5[m build
+[33mc461e0b[m build
+[33m5aaff2e[m build
+[33mbd3ceed[m build
+[33m479ecc6[m build
+[33m84c87ff[m Initial commit
+[33ma57f545[m Initial commit
+[33m49f5d54[m Initial commit
+[33mafd7b01[m Initial commit
+[33m7ef9fae[m Initial commit
+[33m742ed75[m Initial commit
+[33mef92ee6[m Initial commit
+[33m324fb5b[m Initial commit
+[33m9b2f8fb[m Initial commit
+[33m716503d[m Initial commit
+[33ma7f96b6[m Initial commit
+[33mdc898c6[m Initial commit
+[33mc1e27f0[m add yaml
+[33mfd62c2d[m finish frontend
+[33m7f02573[m update frintend homepage
+[33mff7f270[m update frintend homepage
+[33m087fead[m backend import data
+[33mc7c888f[m setup model
+[33m41958dc[m Remove node_modules from repo and add to .gitignore
+[33med8e11c[m Remove venv folder from repo
+[33m1045a54[m Initial commit for Animepedia fullstack project
+[33m69ebd6c[m Delete .gitignore
+[33m4577fae[m Merge branch 'main' of https://github.com/itsmehoneyyy/Animepedia
+[33mbdcceb5[m Initial project setup with frontend, backend
+[33m08e7b24[m Initial commit

@@ -2,9 +2,8 @@
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
   "/_document": "pages/_document.js",
-  "/signin": "pages/signin.js",
-  "/": "pages/index.js",
   "/anime/[id]": "pages/anime/[id].js",
-  "/anime/[id]/reviews": "pages/anime/[id]/reviews.js",
-  "/profile": "pages/profile.js"
+  "/profile": "pages/profile.js",
+  "/": "pages/index.js",
+  "/anime/[id]/reviews": "pages/anime/[id]/reviews.js"
 }
