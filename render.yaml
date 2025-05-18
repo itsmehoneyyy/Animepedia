@@ -5,6 +5,7 @@ services:
     repo: https://github.com/itsmehoneyyy/Animepedia
     branch: main
     dockerfilePath: backend/Dockerfile
+    plan: free
     # ใช้คำสั่งเดียวกับ docker-compose command
     dockerCommand: >
       sh -c "python wait_for_db.py &&
@@ -26,6 +27,7 @@ services:
     repo: https://github.com/itsmehoneyyy/Animepedia
     branch: main
     dockerfilePath: frontend/Dockerfile
+    plan: free
     # ไม่ต้องระบุ dockerCommand ถ้าใช้ CMD ใน Dockerfile (npm run dev)
     envVars:
       - key: NEXT_PUBLIC_API_URL
