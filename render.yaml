@@ -6,11 +6,6 @@ services:
     branch: main
     dockerfilePath: backend/Dockerfile
     plan: free
-    # ใช้คำสั่งเดียวกับ docker-compose command
-    dockerCommand: >
-      sh -c "python wait_for_db.py &&
-             python manage.py migrate &&
-             python manage.py runserver 0.0.0.0:8000"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -20,6 +15,7 @@ services:
         generateValue: true
       - key: DEBUG
         value: "False"
+
 
   - type: web
     name: animepedia-frontend
