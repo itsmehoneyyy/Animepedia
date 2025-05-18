@@ -2,6 +2,7 @@
 Animepedia (อนิเมะพีเดีย) เว็บไซต์รวมรวบข้อมูลอนิเมะและแพลตฟอร์มดูอนิเมะในไทย
 
 ## (commit อาจจะแปลกๆเพราะลองทำ deploy render ย้ายไฟล์ไปมาจน path พัง buld ไม่ได้ เลยจบที่ย้อนกลับมาตัวเก่าที่สมบูรณ์ค่ะ)
+## สำหรับตัว local ขั้นพัฒนา ดูที่ branch restore-working-version
 
 # Animepedia Backend & Frontend
 
