@@ -17,11 +17,12 @@ services:
     depends_on:
       - db
     environment:
-      # เอา DATABASE_URL เข้าไปเลย ไม่ต้อง .env
-      DATABASE_URL: "postgresql://myuser:mypassword@db:5432/mydb"
-      # ตัวแปรเสริมอื่นๆ
-      DJANGO_SECRET_KEY: "your-local-secret-key"
-      DEBUG: "True"
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=myuser
+      - DB_PASSWORD=mypassword
+      - DB_NAME=mydb
+      - PGSSLMODE=disable
     command: >
       sh -c "python wait_for_db.py &&
              python manage.py migrate &&

@@ -1,32 +1,21 @@
 services:
   - type: web
     name: animepedia-backend
-    region: us-west-2
-    runtime: docker
-    repo: https://github.com/itsmehoneyyy/Animepedia
-    branch: main
-    dockerfilePath: backend/Dockerfile
-    plan: free
-# render.yaml (service backend)
-services:
-  - type: web
-    name: animepedia-backend
     runtime: docker
     repo: https://github.com/itsmehoneyyy/Animepedia
     branch: main
     dockerfilePath: backend/Dockerfile
     plan: free
     envVars:
-      # ดึง Internal Database URL มาเป็น DATABASE_URL
       - key: DATABASE_URL
         fromDatabase:
           name: animepedia-db
-          property: internalDatabaseUrl
-
+          property: connectionString
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
+
 
 
   - type: web

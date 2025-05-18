@@ -92,16 +92,21 @@ if database_url:
             ssl_require=True
         )
     }
-# ถ้าไม่มี DATABASE_URL แต่ใช้ตัวแยก DB_* (docker-compose)
 elif os.getenv("DB_HOST"):
     DATABASES = {
-        "default": {
-            "ENGINE":   "django.db.backends.postgresql",
-            "NAME":     os.getenv("DB_NAME",     "mydb"),
-            "USER":     os.getenv("DB_USER",     "myuser"),
-            "PASSWORD": os.getenv("DB_PASSWORD", "mypassword"),
-            "HOST":     os.getenv("DB_HOST",     "db"),
-            "PORT":     os.getenv("DB_PORT",     "5432"),
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     os.getenv('DB_NAME',     'mydb'),
+            'USER':     os.getenv('DB_USER',     'myuser'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'mypassword'),
+            'HOST':     os.getenv('DB_HOST',     'db'),
+            'PORT':     os.getenv('DB_PORT',     '5432'),
+           'OPTIONS': {
+               'sslmode': 'disable',
+           },
+            'OPTIONS': {
+                'sslmode': 'disable',   # ← ปิด SSL สำหรับ local
+            },
         }
     }
 else:
