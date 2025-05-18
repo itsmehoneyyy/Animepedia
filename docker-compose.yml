@@ -10,7 +10,7 @@ services:
 
   backend:
     build:
-      context: . # เอา root โปรเจกต์เป็น context
+      context: .
       dockerfile: backend/Dockerfile
     volumes:
       - ./backend:/app

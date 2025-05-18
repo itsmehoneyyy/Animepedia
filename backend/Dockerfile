@@ -13,6 +13,5 @@ COPY backend/ .
 
 # 4) รันสคริปต์รอ DB + migrate + serve
 CMD ["sh", "-c", \
-    "python wait_for_db.py && \
-    python manage.py migrate && \
-    gunicorn animeproject.wsgi:application --bind 0.0.0.0:8000"]
+    "python wait_for_db.py && python manage.py migrate && ", \
+    "gunicorn animeproject.wsgi:application --bind 0.0.0.0:$PORT"]
