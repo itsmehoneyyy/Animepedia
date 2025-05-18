@@ -82,33 +82,33 @@ WSGI_APPLICATION = 'animeproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASE_URL = os.getenv("DATABASE_URL")
-
-if DATABASE_URL:
-    # บน Render: อ่าน URL ตรงๆ (host, port, user, pass, db อยู่ใน URL)
+# อ่าน DATABASE_URL ก่อน ถ้ามี ใช้ production
+database_url = os.getenv("DATABASE_URL")
+if database_url:
     DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
+        "default": dj_database_url.config(
+            default=database_url,
             conn_max_age=600,
             ssl_require=True
         )
     }
-
+# ถ้าไม่มี DATABASE_URL แต่ใช้ตัวแยก DB_* (docker-compose)
 elif os.getenv("DB_HOST"):
-    # บน Local / Docker Compose: ใช้ตัวแปรแยก
     DATABASES = {
-        'default': {
-            'ENGINE':   'django.db.backends.postgresql',
-            'NAME':     os.getenv('DB_NAME',     'mydb'),
-            'USER':     os.getenv('DB_USER',     'myuser'),
-            'PASSWORD': os.getenv('DB_PASSWORD', 'mypassword'),
-            'HOST':     os.getenv('DB_HOST',     'db'),
-            'PORT':     os.getenv('DB_PORT',     '5432'),
+        "default": {
+            "ENGINE":   "django.db.backends.postgresql",
+            "NAME":     os.getenv("DB_NAME",     "mydb"),
+            "USER":     os.getenv("DB_USER",     "myuser"),
+            "PASSWORD": os.getenv("DB_PASSWORD", "mypassword"),
+            "HOST":     os.getenv("DB_HOST",     "db"),
+            "PORT":     os.getenv("DB_PORT",     "5432"),
         }
     }
-
 else:
-    raise RuntimeError("No database configuration found. Set DATABASE_URL or DB_HOST etc.")
+    raise RuntimeError(
+        "No database configuration found. "
+        "Set DATABASE_URL (prod) or DB_HOST/... (local)."
+    )
 
 
 # Password validation

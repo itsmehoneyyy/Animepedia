@@ -7,31 +7,27 @@ services:
     branch: main
     dockerfilePath: backend/Dockerfile
     plan: free
+# render.yaml (service backend)
+services:
+  - type: web
+    name: animepedia-backend
+    runtime: docker
+    repo: https://github.com/itsmehoneyyy/Animepedia
+    branch: main
+    dockerfilePath: backend/Dockerfile
+    plan: free
     envVars:
-      - key: DB_HOST
+      # ดึง Internal Database URL มาเป็น DATABASE_URL
+      - key: DATABASE_URL
         fromDatabase:
           name: animepedia-db
-          property: host
-      - key: DB_PORT
-        fromDatabase:
-          name: animepedia-db
-          property: port
-      - key: DB_USER
-        fromDatabase:
-          name: animepedia-db
-          property: user
-      - key: DB_PASSWORD
-        fromDatabase:
-          name: animepedia-db
-          property: password
-      - key: DB_NAME
-        fromDatabase:
-          name: animepedia-db
-          property: databaseName
+          property: internalDatabaseUrl
+
       - key: DJANGO_SECRET_KEY
         generateValue: true
       - key: DEBUG
         value: "False"
+
 
   - type: web
     name: animepedia-frontend

@@ -12,19 +12,16 @@ services:
     build:
       context: .
       dockerfile: backend/Dockerfile
-    volumes:
-      - ./backend:/app
-      - ./backend/animeapp/management/commands:/app/animeapp/management/commands
     ports:
       - "8000:8000"
     depends_on:
       - db
     environment:
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_USER=myuser
-      - DB_PASSWORD=mypassword
-      - DB_NAME=mydb
+      # เอา DATABASE_URL เข้าไปเลย ไม่ต้อง .env
+      DATABASE_URL: "postgresql://myuser:mypassword@db:5432/mydb"
+      # ตัวแปรเสริมอื่นๆ
+      DJANGO_SECRET_KEY: "your-local-secret-key"
+      DEBUG: "True"
     command: >
       sh -c "python wait_for_db.py &&
              python manage.py migrate &&
@@ -32,21 +29,17 @@ services:
 
   frontend:
     build: ./frontend
-    volumes:
-      - ./frontend:/app:cached
-      - nextjs-cache:/app/.next # ← เพิ่มบรรทัดนี้
     ports:
       - "3000:3000"
     depends_on:
       - backend
     environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:8000/api/
-      - CHOKIDAR_USEPOLLING=true
-      - HOST=0.0.0.0
-      - PORT=3000
+      NEXT_PUBLIC_API_URL: http://localhost:8000/api/
+      CHOKIDAR_USEPOLLING: "true"
+      HOST: 0.0.0.0
+      PORT: 3000
     command: >
       sh -c "npm run dev -- -H 0.0.0.0 -p 3000"
 
 volumes:
   pgdata:
-  nextjs-cache: # ← และเพิ่มบรรทัดนี้
