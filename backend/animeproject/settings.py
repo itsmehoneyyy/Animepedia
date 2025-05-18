@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,16 +22,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-rlzqlfb^d=w#y)@jlp_776+2n11jc540ia-)7j=w$_zo-+&03c'
-
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
 ALLOWED_HOSTS = []
 CORS_ALLOW_ALL_ORIGINS = True
 AUTH_USER_MODEL = 'users.CustomUser'
 TLEXPLUS_API_KEY = "hA9lIdqqKzZGsiQxM9No5etJobXkDNGb"
+
 
 # Application definition
 
@@ -84,19 +82,34 @@ WSGI_APPLICATION = 'animeproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("LOCAL_DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 if DATABASE_URL:
+    # บน Render: อ่าน URL ตรงๆ (host, port, user, pass, db อยู่ใน URL)
     DATABASES = {
-        "default": dj_database_url.config(
+        'default': dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=bool(os.getenv("DATABASE_URL")),  # ssl เฉพาะที่มี DATABASE_URL จริง
+            ssl_require=True
         )
     }
+
+elif os.getenv("DB_HOST"):
+    # บน Local / Docker Compose: ใช้ตัวแปรแยก
+    DATABASES = {
+        'default': {
+            'ENGINE':   'django.db.backends.postgresql',
+            'NAME':     os.getenv('DB_NAME',     'mydb'),
+            'USER':     os.getenv('DB_USER',     'myuser'),
+            'PASSWORD': os.getenv('DB_PASSWORD', 'mypassword'),
+            'HOST':     os.getenv('DB_HOST',     'db'),
+            'PORT':     os.getenv('DB_PORT',     '5432'),
+        }
+    }
+
 else:
-    # (แค่กันเหนียว ถ้าไม่เจอทั้งคู่)
-    raise RuntimeError("No database URL set")
+    raise RuntimeError("No database configuration found. Set DATABASE_URL or DB_HOST etc.")
+
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -121,11 +134,8 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
 
@@ -134,11 +144,14 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# REST Framework config
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
         "django_filters.rest_framework.DjangoFilterBackend",
@@ -153,8 +166,7 @@ REST_FRAMEWORK = {
     ],
 }
 
-from datetime import timedelta
-
+# Simple JWT config
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),

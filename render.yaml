@@ -6,16 +6,28 @@ services:
     branch: main
     dockerfilePath: backend/Dockerfile
     plan: free
+    # เอา DATABASE_URL ออกได้ (เราเช็คแยก host/port)
     envVars:
-      - key: DATABASE_URL
+      - key: DB_HOST
         fromDatabase:
           name: animepedia-db
-          property: connectionString
-      - key: DJANGO_SECRET_KEY
-        generateValue: true
-      - key: DEBUG
-        value: "False"
-
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: animepedia-db
+          property: port
+      - key: DB_USER
+        fromDatabase:
+          name: animepedia-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: animepedia-db
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: animepedia-db
+          property: database
 
   - type: web
     name: animepedia-frontend
@@ -24,7 +36,6 @@ services:
     branch: main
     dockerfilePath: frontend/Dockerfile
     plan: free
-    # ไม่ต้องระบุ dockerCommand ถ้าใช้ CMD ใน Dockerfile (npm run dev)
     envVars:
       - key: NEXT_PUBLIC_API_URL
         value: https://animepedia-backend.onrender.com/api/
@@ -33,7 +44,7 @@ services:
 
 databases:
   - name: animepedia-db
-    region: singapore
+    region: us-west-2
     plan: free
     databaseName: mydb
     user: myuser

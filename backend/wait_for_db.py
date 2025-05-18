@@ -1,26 +1,28 @@
 import os
 import time
 import psycopg2
-from urllib.parse import urlparse
 
-# อ่าน URL จาก ENV
-DATABASE_URL = os.environ.get("DATABASE_URL")
-if not DATABASE_URL:
-    # fallback local (docker-compose) ถ้าอยากก็ define ไว้ใน .env หรือตรงนี้ก็ได้
-    # ตัวอย่าง: postgres://myuser:mypassword@db:5432/mydb
-    DATABASE_URL = os.getenv("LOCAL_DATABASE_URL")
-    if not DATABASE_URL:
-        raise RuntimeError("DATABASE_URL or LOCAL_DATABASE_URL not set")
+# 1) พยายามอ่าน DATABASE_URL ก่อน (Render จะเซ็ตให้)
+DATABASE_URL = os.getenv("DATABASE_URL")
 
-# parse URL
-result   = urlparse(DATABASE_URL)
-dbname   = result.path.lstrip("/")
-user     = result.username
-password = result.password
-host     = result.hostname
-port     = result.port or 5432
+if DATABASE_URL:
+    # parse URL แต่เราไม่ต้องใช้ parse-based host อีกแล้ว
+    from urllib.parse import urlparse
+    result   = urlparse(DATABASE_URL)
+    host     = result.hostname
+    port     = result.port or 5432
+    user     = result.username
+    password = result.password
+    dbname   = result.path.lstrip("/")
+else:
+    # 2) ถ้าไม่มี DATABASE_URL (Local หรือ Render ได้ ENV แยก)
+    host     = os.getenv("DB_HOST", "db")
+    port     = int(os.getenv("DB_PORT", 5432))
+    user     = os.getenv("DB_USER", "myuser")
+    password = os.getenv("DB_PASSWORD", "mypassword")
+    dbname   = os.getenv("DB_NAME", "mydb")
 
-print(f"Waiting for PostgreSQL at {host}:{port}…")
+print(f"Waiting for PostgreSQL at {host}:{port}/{dbname}…")
 
 while True:
     try:
@@ -35,5 +37,5 @@ while True:
         print("PostgreSQL is ready!")
         break
     except Exception as e:
-        print("PostgreSQL unavailable, waiting 1s…", e)
+        print(f"PostgreSQL unavailable, waiting 1s… {e}")
         time.sleep(1)
