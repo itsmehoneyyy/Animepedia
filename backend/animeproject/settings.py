@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -82,16 +84,30 @@ WSGI_APPLICATION = 'animeproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-  'default': {
-    'ENGINE': 'django.db.backends.postgresql',
-    'NAME': 'mydb',
-    'USER': 'myuser',
-    'PASSWORD': 'mypassword',
-    'HOST': 'db',
-    'PORT': 5432,
-  }
-}
+# 1. อ่านตัวแปร DATABASE_URL (Render จะตั้งให้)
+DATABASE_URL = os.getenv("DATABASE_URL")
+
+if DATABASE_URL:
+    # บน Render ใช้ DATABASE_URL ตรงๆ (port, host, user, pass แถมมาใน URL)
+    DATABASES = {
+        "default": dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            ssl_require=True,
+        )
+    }
+else:
+    # บน Local (docker-compose) ใช้ค่าคงที่ตาม docker-compose.yml
+    DATABASES = {
+        "default": {
+            "ENGINE":   "django.db.backends.postgresql",
+            "NAME":     "mydb",      # ตาม POSTGRES_DB
+            "USER":     "myuser",    # ตาม POSTGRES_USER
+            "PASSWORD": "mypassword",# ตาม POSTGRES_PASSWORD
+            "HOST":     "db",        # service name ใน docker-compose
+            "PORT":     "5432",      # ภายใน container คือ 5432
+        }
+    }
 
 
 # Password validation
