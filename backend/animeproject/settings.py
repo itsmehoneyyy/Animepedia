@@ -84,31 +84,19 @@ WSGI_APPLICATION = 'animeproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-# 1. อ่านตัวแปร DATABASE_URL (Render จะตั้งให้)
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL") or os.getenv("LOCAL_DATABASE_URL")
 
 if DATABASE_URL:
-    # บน Render ใช้ DATABASE_URL ตรงๆ (port, host, user, pass แถมมาใน URL)
     DATABASES = {
         "default": dj_database_url.config(
             default=DATABASE_URL,
             conn_max_age=600,
-            ssl_require=True,
+            ssl_require=bool(os.getenv("DATABASE_URL")),  # ssl เฉพาะที่มี DATABASE_URL จริง
         )
     }
 else:
-    # บน Local (docker-compose) ใช้ค่าคงที่ตาม docker-compose.yml
-    DATABASES = {
-        "default": {
-            "ENGINE":   "django.db.backends.postgresql",
-            "NAME":     "mydb",      # ตาม POSTGRES_DB
-            "USER":     "myuser",    # ตาม POSTGRES_USER
-            "PASSWORD": "mypassword",# ตาม POSTGRES_PASSWORD
-            "HOST":     "db",        # service name ใน docker-compose
-            "PORT":     "5432",      # ภายใน container คือ 5432
-        }
-    }
-
+    # (แค่กันเหนียว ถ้าไม่เจอทั้งคู่)
+    raise RuntimeError("No database URL set")
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
